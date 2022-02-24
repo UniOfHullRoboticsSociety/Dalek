@@ -1,1 +1,27 @@
 <?xml version="1.0"?>
+<launch>
+    <arg name="model" default="$(find dalek)/urdf/dalek.urdf" />
+    <arg name="rvizconfig" default="$(find dalek)/rviz/urdf.rviz" />
+  
+    <include file="$(find dalek)/launch/gazebo.launch">
+      <arg name="model" value="$(arg model)" />
+    </include>
+  
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+  
+    <rosparam command="load"
+              file="$(find dalek)/config/joints.yaml"
+              ns="dalek_joint_state_controller" />
+    <rosparam command="load"
+              file="$(find dalek)/config/diffdrive.yaml"
+              ns="dalek_diff_drive_controller" />
+  
+    <node name="dalek_controller_spawner" pkg="controller_manager" type="spawner"
+      args="dalek_joint_state_controller
+            dalek_diff_drive_controller
+            --shutdown-timeout 3"/>
+  
+    <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+      <param name="default_topic" value="/dalek_diff_drive_controller/cmd_vel"/>
+    </node>
+  </launch>

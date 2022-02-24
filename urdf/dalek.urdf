@@ -98,7 +98,7 @@
             <inertia ixx="0.4" ixy="0.0" ixz="0.0"  iyy="0.4" iyz="0.0" izz="0.2" />
         </inertial>
     </link>
-    <joint name="left_back_wheel_joint" type="fixed">
+    <joint name="left_back_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="left_back_wheel" />
         <origin rpy="0 0 0" xyz="0.2 -0.3 -0.685" />
@@ -123,11 +123,35 @@
             <inertia ixx="0.4" ixy="0.0" ixz="0.0"  iyy="0.4" iyz="0.0" izz="0.2" />
         </inertial>
     </link>
-    <joint name="right_back_wheel_joint" type="fixed">
+    <joint name="right_back_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="right_back_wheel" />
         <origin rpy="0 0 0" xyz="-0.2 -0.3 -0.685" />
     </joint>
 
+    <transmission name="left_back_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="left_back_wheel_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="left_back_wheel_joint">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
 
+    <transmission name="right_back_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="right_back_wheel_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="right_back_wheel_joint">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
 </robot>
